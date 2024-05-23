@@ -1,18 +1,25 @@
 package com.aluracursos.literalura.principal;
 
+import com.aluracursos.literalura.dto.DatosDTO;
+import com.aluracursos.literalura.service.ConsumoAPI;
+import com.aluracursos.literalura.service.ConvierteDatos;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Principal {
-    Scanner teclado = new Scanner(System.in);
+    private final Scanner teclado = new Scanner(System.in);
+    private ConsumoAPI consumoAPI = new ConsumoAPI();
+    private ConvierteDatos conversor = new ConvierteDatos();
+    private static final String URL_BASE = "https://gutendex.com/books/?search=";
+    private static final String INVALIDO = "Opción no válida. Por favor, ingresa un número del menú";
 
     public void muestraMenu() {
-        boolean continuar = true;
-        while (continuar) {
+        while (true) {
             int opcion = 0;
             boolean opcionValida = false;
             System.out.println("""
-                    \n** MENU **
+                    ** MENU **
                     1 - Buscar libro por título
                     2 - Listar libros registrados
                     3 - Listar autores registrados
@@ -25,14 +32,15 @@ public class Principal {
             while (!opcionValida) {
                 try {
                     opcion = teclado.nextInt();
+                    teclado.nextLine();
                     if (opcion == 1 || opcion == 2 || opcion == 3 || opcion == 4 || opcion == 5 || opcion == 9) {
                         opcionValida = true;
                     } else {
-                        System.out.println("Opción no válida. Por favor, ingresa un número del menú");
+                        System.out.println(INVALIDO);
                         teclado.nextLine();
                     }
                 } catch (InputMismatchException e) {
-                    System.out.println("Opción no válida. Por favor, ingresa un número del menú");
+                    System.out.println(INVALIDO);
                     teclado.nextLine();
                 }
             }
@@ -55,19 +63,24 @@ public class Principal {
                     break;
                 case 9:
                     System.out.println("Cerrando la aplicación...");
-                    continuar = false;
                     System.exit(0);
                     break;
-                default:
-                    System.out.println("Opción no válida. Por favor, ingresa un número del menú");
             }
         }
     }
 
     private void buscaLibroPorTitulo() {
+        System.out.println("Por favor, ingresa el nombre o parte del nombre del libro que deseas buscar");
+        String libroBuscado = teclado.nextLine();
+        String url = URL_BASE + libroBuscado.replace(" ", "%20");
+        var json3 = consumoAPI.obtenerDatos(url);
+        var datos3 = conversor.obtenerDatos(json3, DatosDTO.class);
+        System.out.println(datos3);
     }
 
     private void listaLibrosRegistrados() {
+
+
     }
 
     private void listaAutoresRegistrados() {

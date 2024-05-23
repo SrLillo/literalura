@@ -1,10 +1,6 @@
 package com.aluracursos.literalura;
 
-import com.aluracursos.literalura.dto.DatosDTO;
-import com.aluracursos.literalura.dto.LibroDTO;
 import com.aluracursos.literalura.principal.Principal;
-import com.aluracursos.literalura.service.ConsumoAPI;
-import com.aluracursos.literalura.service.ConvierteDatos;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,11 +14,10 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		var consumoAPI = new ConsumoAPI();
-		var json = consumoAPI.obtenerDatos("https://gutendex.com/books/");
-		System.out.println(json);
+/*		var consumoAPI = new ConsumoAPI();
+		var conversor = new ConvierteDatos();
 
-		ConvierteDatos conversor = new ConvierteDatos();
+		var json = consumoAPI.obtenerDatos("https://gutendex.com/books/");
 		var datos = conversor.obtenerDatos(json, DatosDTO.class);
 		System.out.println(datos);
 
@@ -30,6 +25,10 @@ public class LiteraluraApplication implements CommandLineRunner {
 		var datos1 = conversor.obtenerDatos(json1, LibroDTO.class);
 		System.out.println(datos1);
 
+		var json3 = consumoAPI.obtenerDatos("https://gutendex.com/books/?search=divina");
+		var datos3 = conversor.obtenerDatos(json3, DatosDTO.class);
+		System.out.println(datos3);
+*/
 		Principal principal = new Principal();
 		principal.muestraMenu();
 	}
