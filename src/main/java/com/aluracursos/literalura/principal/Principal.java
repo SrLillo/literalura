@@ -1,5 +1,6 @@
 package com.aluracursos.literalura.principal;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Principal {
@@ -8,6 +9,8 @@ public class Principal {
     public void muestraMenu() {
         boolean continuar = true;
         while (continuar) {
+            int opcion = 0;
+            boolean opcionValida = false;
             System.out.println("""
                     \n** MENU **
                     1 - Buscar libro por título
@@ -19,7 +22,20 @@ public class Principal {
                     9 - Salir
                     """);
 
-            int opcion = Integer.parseInt(teclado.nextLine());
+            while (!opcionValida) {
+                try {
+                    opcion = teclado.nextInt();
+                    if (opcion == 1 || opcion == 2 || opcion == 3 || opcion == 4 || opcion == 5 || opcion == 9) {
+                        opcionValida = true;
+                    } else {
+                        System.out.println("Opción no válida. Por favor, ingresa un número del menú");
+                        teclado.nextLine();
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Opción no válida. Por favor, ingresa un número del menú");
+                    teclado.nextLine();
+                }
+            }
 
             switch (opcion) {
                 case 1:
@@ -40,9 +56,10 @@ public class Principal {
                 case 9:
                     System.out.println("Cerrando la aplicación...");
                     continuar = false;
+                    System.exit(0);
                     break;
                 default:
-                    System.out.println("Opción no válida");
+                    System.out.println("Opción no válida. Por favor, ingresa un número del menú");
             }
         }
     }
