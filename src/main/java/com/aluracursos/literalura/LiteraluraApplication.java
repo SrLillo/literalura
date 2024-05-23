@@ -2,6 +2,7 @@ package com.aluracursos.literalura;
 
 import com.aluracursos.literalura.dto.DatosDTO;
 import com.aluracursos.literalura.dto.LibroDTO;
+import com.aluracursos.literalura.principal.Principal;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 import org.springframework.boot.CommandLineRunner;
@@ -28,5 +29,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 		var json1 = consumoAPI.obtenerDatos("https://gutendex.com/books/31332/");
 		var datos1 = conversor.obtenerDatos(json1, LibroDTO.class);
 		System.out.println(datos1);
+
+		Principal principal = new Principal();
+		principal.muestraMenu();
 	}
 }
