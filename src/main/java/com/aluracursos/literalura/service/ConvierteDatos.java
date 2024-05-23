@@ -8,6 +8,9 @@ public class ConvierteDatos implements IConvierteDatos {
 
     @Override
     public <T> T obtenerDatos(String json, Class<T> clase) {
+        if (json == null || json.isEmpty()) {
+            throw new RuntimeException("No se tienen datos");
+        }
         try {
             return objectMapper.readValue(json, clase);
         } catch (JsonProcessingException e) {
