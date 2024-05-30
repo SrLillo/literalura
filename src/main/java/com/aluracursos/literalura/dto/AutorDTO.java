@@ -5,7 +5,6 @@ public record AutorDTO(
         String fechaDeNacimiento,
         String fechaDeFallecimiento) {
 
-
     public String getFechaDeFallecimiento() {
         return fechaDeFallecimiento;
     }

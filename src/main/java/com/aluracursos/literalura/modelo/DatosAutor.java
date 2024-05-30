@@ -9,15 +9,9 @@ public record DatosAutor(
         @JsonAlias("birth_year") String fechaDeNacimiento,
         @JsonAlias("death_year") String fechaDeFallecimiento) {
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() {return nombre;}
 
-    public String getFechaDeNacimiento() {
-        return fechaDeNacimiento;
-    }
+    public String getFechaDeNacimiento() {return fechaDeNacimiento;}
 
-    public String getFechaDeFallecimiento() {
-        return fechaDeFallecimiento;
-    }
+    public String getFechaDeFallecimiento() {return fechaDeFallecimiento;}
 }

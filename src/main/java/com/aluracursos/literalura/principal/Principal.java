@@ -8,6 +8,7 @@ import com.aluracursos.literalura.repository.AutorRepository;
 import com.aluracursos.literalura.repository.LibroRepository;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
+import com.aluracursos.literalura.service.LibroService;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -22,12 +23,12 @@ public class Principal {
     private static final String INVALIDO = "Opción no válida. Por favor, ingresa un número del menú";
     private final LibroRepository repositorio;
     private final AutorRepository repositorioAutor;
+    LibroService libroService = new LibroService();
 
     public Principal(LibroRepository repository, AutorRepository autorRepository) {
         this.repositorio = repository;
         this.repositorioAutor = autorRepository;
     }
-
 
     public void muestraMenu() {
         while (true) {
@@ -43,7 +44,6 @@ public class Principal {
 
                     9 - Salir
                     """);
-
             while (!opcionValida) {
                 try {
                     opcion = teclado.nextInt();
@@ -59,7 +59,6 @@ public class Principal {
                     teclado.nextLine();
                 }
             }
-
             switch (opcion) {
                 case 1:
                     buscaLibroPorTitulo();
@@ -113,19 +112,52 @@ public class Principal {
 
     private void listaLibrosRegistrados() {
         List<Libro> listadoDeLibrosRegistrados = repositorio.findAll();
-        listadoDeLibrosRegistrados.stream().forEach(System.out::println);
+        System.out.println("\n");
+        listadoDeLibrosRegistrados.stream()
+                .forEach(l -> System.out.println(l.getTitulo()));
+        System.out.println("\n");
     }
 
     private void listaAutoresRegistrados() {
         List<Autor> listadoDeAutoresRegistrados = repositorioAutor.findAll();
-        listadoDeAutoresRegistrados.stream().forEach(System.out::println);
+        System.out.println("\n");
+        listadoDeAutoresRegistrados.stream()
+                        .forEach(a -> System.out.println(a.getNombre()));
+        System.out.println("\n");
     }
 
-
-    private void listaAutoresVivosEnAno() {}
-
+    private void listaAutoresVivosEnAno() {
+        System.out.println("Ingrese el año en el que desea buscar autores vivos:");
+        int anio = teclado.nextInt();
+        teclado.nextLine(); // To consume the new line character
+        List<Autor> autoresVivosEnElAno = repositorioAutor.findAutoresVivosEnAno(anio);
+        System.out.println("\n");
+        for (Autor autor : autoresVivosEnElAno) {
+            System.out.println(autor.getNombre());
+        }
+        System.out.println("\n");
+        if (autoresVivosEnElAno.isEmpty()) {
+            System.out.println("No se encontró ningún autor vivo en el año ingresado.");
+        }
+    }
 
     private void listaLibrosPorIdioma() {
-
+        System.out.println("""
+                        Ingrese el código de idioma en el que desea buscar el libro:
+                        en - inglés
+                        es - castellano
+                        pt - portugués
+                        it - italiano
+                        fr - francés
+                        ru - ruso
+                        y así sucesivamente
+                        """);
+        String idioma = teclado.nextLine();
+        List<String> idiomas = List.of(idioma);
+        List<Libro> librosPorIdioma = repositorio.findByIdiomas(idiomas);
+        System.out.println("\n");
+        librosPorIdioma.stream()
+                .forEach(l -> System.out.println(l.getTitulo()));
+        System.out.println("\n");
     }
 }

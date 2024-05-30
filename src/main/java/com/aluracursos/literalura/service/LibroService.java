@@ -34,4 +34,8 @@ public class LibroService {
         libro.setAutores(autores);
         return libro;
     }
+
+    public List<Autor> findAutoresVivosEnAno(int year) {
+        return autorRepository.findAutoresVivosEnAno(year);
+    }
 }

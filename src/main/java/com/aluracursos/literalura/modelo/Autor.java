@@ -53,9 +53,7 @@ public class Autor {
         return fechaDeFallecimiento;
     }
 
-    public void setFechaDeFallecimiento(String fechaDeFallecimiento) {
-        this.fechaDeFallecimiento = fechaDeFallecimiento;
-    }
+    public void setFechaDeFallecimiento(String fechaDeFallecimiento) {this.fechaDeFallecimiento = fechaDeFallecimiento;}
 
     @Override
     public String toString() {

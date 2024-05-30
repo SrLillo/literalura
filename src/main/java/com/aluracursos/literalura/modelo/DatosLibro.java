@@ -12,9 +12,7 @@ public record DatosLibro(
         @JsonAlias("languages") List<String> idiomas,
         @JsonAlias("download_count") Double numeroDeDescargas) {
 
-    public String getTitulo() {
-        return titulo;
-    }
+    public String getTitulo() {return titulo;}
 
     public List<Autor> getAutores() {
         return autores;
