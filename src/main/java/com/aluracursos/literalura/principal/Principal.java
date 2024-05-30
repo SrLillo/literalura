@@ -1,10 +1,17 @@
 package com.aluracursos.literalura.principal;
 
-import com.aluracursos.literalura.dto.DatosDTO;
+import com.aluracursos.literalura.modelo.Autor;
+import com.aluracursos.literalura.modelo.Datos;
+import com.aluracursos.literalura.modelo.DatosLibro;
+import com.aluracursos.literalura.modelo.Libro;
+import com.aluracursos.literalura.repository.AutorRepository;
+import com.aluracursos.literalura.repository.LibroRepository;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -13,6 +20,14 @@ public class Principal {
     private ConvierteDatos conversor = new ConvierteDatos();
     private static final String URL_BASE = "https://gutendex.com/books/?search=";
     private static final String INVALIDO = "Opción no válida. Por favor, ingresa un número del menú";
+    private final LibroRepository repositorio;
+    private final AutorRepository repositorioAutor;
+
+    public Principal(LibroRepository repository, AutorRepository autorRepository) {
+        this.repositorio = repository;
+        this.repositorioAutor = autorRepository;
+    }
+
 
     public void muestraMenu() {
         while (true) {
@@ -65,30 +80,52 @@ public class Principal {
                     System.out.println("Cerrando la aplicación...");
                     System.exit(0);
                     break;
+                default:
+                    break;
             }
         }
     }
 
     private void buscaLibroPorTitulo() {
         System.out.println("Por favor, ingresa el nombre o parte del nombre del libro que deseas buscar");
-        String libroBuscado = teclado.nextLine();
-        String url = URL_BASE + libroBuscado.replace(" ", "%20");
-        var json3 = consumoAPI.obtenerDatos(url);
-        var datos3 = conversor.obtenerDatos(json3, DatosDTO.class);
-        System.out.println(datos3);
+        String tituloLibro = teclado.nextLine();
+        String url = URL_BASE + tituloLibro.replace(" ", "+");
+        var json = consumoAPI.obtenerDatos(url);
+        var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+        Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
+                .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
+                .findFirst();
+        if (libroBuscado.isPresent()) {
+            System.out.println("\nLibro encontrado: ");
+            DatosLibro l = libroBuscado.get();
+            Libro libroEncontrado = new Libro(l.getTitulo(), l.getAutores(), l.getIdiomas(), l.getNumeroDeDescargas());
+            Optional<Libro> libroExistente = repositorio.findByTitulo(libroEncontrado.getTitulo());
+            if (libroExistente.isPresent()) {
+                System.out.println("El libro ya existe en la base de datos.");
+            } else {
+                repositorio.save(libroEncontrado);
+                System.out.println(libroEncontrado);
+            }
+        } else {
+            System.out.println("\nLibro no encontrado");
+        }
     }
 
     private void listaLibrosRegistrados() {
-
-
+        List<Libro> listadoDeLibrosRegistrados = repositorio.findAll();
+        listadoDeLibrosRegistrados.stream().forEach(System.out::println);
     }
 
     private void listaAutoresRegistrados() {
+        List<Autor> listadoDeAutoresRegistrados = repositorioAutor.findAll();
+        listadoDeAutoresRegistrados.stream().forEach(System.out::println);
     }
 
-    private void listaAutoresVivosEnAno() {
-    }
+
+    private void listaAutoresVivosEnAno() {}
+
 
     private void listaLibrosPorIdioma() {
+
     }
 }

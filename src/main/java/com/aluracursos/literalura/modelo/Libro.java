@@ -1,34 +1,40 @@
 package com.aluracursos.literalura.modelo;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 
+@Entity
+@Table(name = "libros")
 public class Libro {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String titulo;
-    private List<String> temas;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "libro_autor",
+            joinColumns = @JoinColumn(name = "libro_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
     private List<Autor> autores;
-    private List<String> estanterias;
     private List<String> idiomas;
-    private String tipoDeMedio;
     private Double numeroDeDescargas;
 
-    public Libro() {}
+    public Libro(){}
 
-    public Libro(String titulo, List<String> temas, List<Autor> autores, List<String> estanterias, List<String> idiomas, String tipoDeMedio, Double numeroDeDescargas) {
+    public Libro(String titulo, List<Autor> autores, List<String> idiomas, Double numeroDeDescargas) {
         this.titulo = titulo;
-        this.temas = temas;
         this.autores = autores;
-        this.estanterias = estanterias;
         this.idiomas = idiomas;
-        this.tipoDeMedio = tipoDeMedio;
         this.numeroDeDescargas = numeroDeDescargas;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,14 +46,6 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public List<String> getTemas() {
-        return temas;
-    }
-
-    public void setTemas(List<String> temas) {
-        this.temas = temas;
-    }
-
     public List<Autor> getAutores() {
         return autores;
     }
@@ -56,28 +54,12 @@ public class Libro {
         this.autores = autores;
     }
 
-    public List<String> getEstanterias() {
-        return estanterias;
-    }
-
-    public void setEstanterias(List<String> estanterias) {
-        this.estanterias = estanterias;
-    }
-
     public List<String> getIdiomas() {
         return idiomas;
     }
 
     public void setIdiomas(List<String> idiomas) {
         this.idiomas = idiomas;
-    }
-
-    public String getTipoDeMedio() {
-        return tipoDeMedio;
-    }
-
-    public void setTipoDeMedio(String tipoDeMedio) {
-        this.tipoDeMedio = tipoDeMedio;
     }
 
     public Double getNumeroDeDescargas() {
@@ -93,11 +75,8 @@ public class Libro {
         return "Libro{" +
                 "id=" + id +
                 ", titulo='" + titulo + '\'' +
-                ", temas=" + temas +
                 ", autores=" + autores +
-                ", estanterías=" + estanterias +
                 ", idiomas=" + idiomas +
-                ", tipoDeMedio='" + tipoDeMedio + '\'' +
                 ", numeroDeDescargas=" + numeroDeDescargas +
                 '}';
     }
